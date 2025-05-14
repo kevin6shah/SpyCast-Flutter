@@ -20,7 +20,7 @@
 
 | Home Page         | Game Lobby         | Players View     | Spy View       | Voting Screen       |
 |-------------------|--------------------|------------------|----------------|---------------------|
-| ![Home Page](screenshots/IMG_0009.png) | ![Game Lobby](screenshots/IMG_0011.png) | ![Players View](screenshots/IMG_0020.png) | ![Spy View](screenshots/IMG_0012.png) | ![Voting](screenshots/IMG_0013.png) |
+| ![Home Page](screenshots/IMG_0009.PNG) | ![Game Lobby](screenshots/IMG_0011.PNG) | ![Players View](screenshots/IMG_0020.PNG) | ![Spy View](screenshots/IMG_0012.PNG) | ![Voting](screenshots/IMG_0013.PNG) |
 
 > Place your screenshots inside a `screenshots/` folder in the root directory of your repo.
 
