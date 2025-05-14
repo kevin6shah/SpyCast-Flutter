@@ -1,0 +1,8 @@
+app_identifier("com.kevin6shah.spycast") # The bundle identifier of your app
+apple_id("kevin6shah@gmail.com") # Your Apple Developer Portal username
+
+itc_team_id("127816301") # App Store Connect Team ID
+team_id("K6R2WHJ39C") # Developer Portal Team ID
+
+# For more information about the Appfile, see:
+#     https://docs.fastlane.tools/advanced/#appfile
