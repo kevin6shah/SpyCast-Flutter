@@ -2,7 +2,7 @@
 # 🕵️ Spycast
 
 ![Made with Flutter](https://img.shields.io/badge/Made%20with-Flutter-02569B?logo=flutter&logoColor=white)
-[![App Store](https://img.shields.io/badge/App%20Store-Download-blue?logo=apple)](https://apps.apple.com/app/id000000000)
+[![App Store](https://img.shields.io/badge/App%20Store-Download-blue?logo=apple)](https://apps.apple.com/app/spycast/id6745496038)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
 **Spycast** is a real-time multiplayer spy game where players use subtle conversation and deduction to figure out who the spies are—before it's too late.
@@ -11,8 +11,7 @@
 
 ## 📱 Download
 
-📲 [Download on the App Store](https://apps.apple.com/app/id000000000)  
-(*Link placeholder—update with your real App Store URL*)
+📲 [Download on the App Store](https://apps.apple.com/app/spycast/id6745496038)  
 
 ---
 
