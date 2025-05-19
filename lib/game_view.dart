@@ -131,6 +131,7 @@ class _GameViewState extends State<GameView> {
     String pack,
     List<String> usedWords,
     int timeLimit,
+    Duration? votingExpiration,
   ) {
     countdownTimer?.cancel();
     setState(() {
@@ -154,7 +155,9 @@ class _GameViewState extends State<GameView> {
           });
         }
         startWordTimerCountdown();
-        startVotingCountdown(isHost, timeLimit);
+        if (isHost && votingExpiration == null) {
+          updateFSVotingExpiration(timeLimit);
+        }
       }
     });
   }
@@ -175,10 +178,16 @@ class _GameViewState extends State<GameView> {
     });
   }
 
+  void updateFSVotingExpiration(int timeLimit) {
+    FirebaseFirestore.instance.collection('games').doc(gameCode).update({
+      'votingExpiration': DateTime.now().add(Duration(minutes: timeLimit)),
+    });
+  }
+
   void startVotingCountdown(bool isHost, int timeLimit) {
     votingTimer?.cancel();
     setState(() {
-      votingTimerCountdown = timeLimit * 60; // store as seconds
+      votingTimerCountdown = timeLimit; // store as seconds
     });
     votingTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (votingTimerCountdown > 0) {
@@ -211,6 +220,7 @@ class _GameViewState extends State<GameView> {
     FirebaseFirestore.instance.collection('games').doc(gameCode).update({
       'votes': [],
       'wordState': 'VOTING',
+      'votingExpiration': FieldValue.delete(),
     });
   }
 
@@ -334,16 +344,39 @@ class _GameViewState extends State<GameView> {
     isHost = (gameData['host']?.toString() ?? '') == userName;
     String pack = gameData['pack']?.toString() ?? '';
     List<String> usedWords = List<String>.from(gameData['usedWords'] ?? []);
+    Duration? votingExpiration =
+        gameData['votingExpiration'] != null
+            ? (gameData['votingExpiration'] as Timestamp).toDate().difference(
+              DateTime.now(),
+            )
+            : null;
+
+    if (votingExpiration?.isNegative == true) {
+      votingExpiration = null; // If the expiration is in the past, set to null
+      if (isHost) {
+        startVoting();
+      }
+    }
 
     int votingPlayersLeft =
         gameData['players'].length - (gameData['votes']?.length ?? 0);
 
     if (wordState == 'COUNTER' && lastWordState != 'COUNTER') {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        startCountdown(isHost, pack, usedWords, gameData['timeLimit']);
+        startCountdown(
+          isHost,
+          pack,
+          usedWords,
+          gameData['timeLimit'],
+          votingExpiration,
+        );
       });
     }
     lastWordState = wordState;
+
+    if (votingExpiration != null) {
+      startVotingCountdown(isHost, votingExpiration.inSeconds);
+    }
 
     if (wordState == 'INIT') {
       initializeGame();
@@ -514,6 +547,7 @@ class _GameViewState extends State<GameView> {
                     players: gameData['players'],
                     numSpies: gameData['numSpies'] as int,
                     currentRound: gameData['currentRound'] as int,
+                    currWord: gameData['usedWords'].last as String,
                   );
 
                 case 'FINAL_RESULTS':
@@ -610,12 +644,12 @@ class _GameViewState extends State<GameView> {
                         Row(
                           children: [
                             Icon(
-                              CupertinoIcons.person,
+                              CupertinoIcons.repeat,
                               color: CupertinoColors.white,
                             ),
                             SizedBox(width: 5),
                             Text(
-                              gameData['players'].length.toString(),
+                              '${gameData['currentRound']}/${gameData['numRounds']}',
                               style: const TextStyle(
                                 fontSize: 18,
                                 color: CupertinoColors.white,
@@ -706,6 +740,7 @@ class _GameViewState extends State<GameView> {
                                 'usedWords': [],
                                 'currentRound': 0,
                                 'players': players,
+                                'votingExpiration': FieldValue.delete(),
                               });
                         },
                       ),

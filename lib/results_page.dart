@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:spycast/game_lobby.dart';
 
 class ResultsPage extends StatefulWidget {
   const ResultsPage({
@@ -7,11 +8,13 @@ class ResultsPage extends StatefulWidget {
     required this.players,
     required this.numSpies,
     required this.currentRound,
+    required this.currWord,
   });
   final bool spyWin;
   final int numSpies;
   final List<dynamic> players;
   final int currentRound;
+  final String currWord;
 
   @override
   State<ResultsPage> createState() => _ResultsPageState();
@@ -154,6 +157,16 @@ class _ResultsPageState extends State<ResultsPage> {
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
+                      Text(
+                        capitalizeWords(widget.currWord),
+                        textAlign: TextAlign.left,
+                        style: const TextStyle(
+                          fontSize: 25,
+                          fontWeight: FontWeight.w600,
+                          color: CupertinoColors.white,
+                        ),
+                      ),
+                      SizedBox(height: 10),
                       Text(
                         'Round ${widget.currentRound} Results',
                         textAlign: TextAlign.left,
